@@ -26,31 +26,35 @@ class TransactionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('type')
+                Forms\Components\Section::make()
+                ->schema([
+                    Forms\Components\TextInput::make('amount')
+                        ->required()
+                        ->numeric()
+                        ->rules('min:0.01'),
+                    Forms\Components\Select::make('type')
                     ->options([
-                        CategoryType::EXPENSE->value => 'Expense',
-                        CategoryType::INCOME->value => 'Income',
-                    ])
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, $set, $get) => $set('category_id', null)),
-                Forms\Components\Select::make('category_id')
-                    ->options(function ($get) {
-                        $type = $get('type');
-                        if ($type) {
-                            return Category::where('type', $type)->pluck('name', 'id');
-                        }
-                        return Category::pluck('name', 'id');
-                    })
-                    ->required()
-                    ->label('Category'),
-                Forms\Components\DatePicker::make('date')->required(),
-                Forms\Components\Hidden::make('user_id')
-                    ->default(fn () => Auth::id())
-                    ->required(),
+                            CategoryType::EXPENSE->value => 'Expense',
+                            CategoryType::INCOME->value => 'Income',
+                        ])
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(fn ($state, $set, $get) => $set('category_id', null)),
+                    Forms\Components\Select::make('category_id')
+                        ->options(function ($get) {
+                            $type = $get('type');
+                            if ($type) {
+                                return Category::where('type', $type)->pluck('name', 'id');
+                            }
+                            return Category::pluck('name', 'id');
+                        })
+                        ->required()
+                        ->label('Category'),
+                    Forms\Components\DatePicker::make('date')->required(),
+                    Forms\Components\Hidden::make('user_id')
+                        ->default(fn () => Auth::id())
+                        ->required(),
+                ])
             ]);
     }
 
@@ -61,22 +65,22 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('amount'),
                 Tables\Columns\TextColumn::make('category.name')->label('Category'),
                 Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('date'),
+                Tables\Columns\TextColumn::make('date')->date(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
+                    ->label('Type')
                     ->options([
                         CategoryType::EXPENSE->value => 'Expense',
                         CategoryType::INCOME->value => 'Income',
                     ]),
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->options(fn() => Category::pluck('name', 'id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

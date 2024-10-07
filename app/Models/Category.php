@@ -5,6 +5,7 @@ namespace App\Models;
 use App\CategoryType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -15,4 +16,9 @@ class Category extends Model
     protected $casts = [
         'type' => CategoryType::class,
     ];
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

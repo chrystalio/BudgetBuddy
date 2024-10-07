@@ -35,3 +35,49 @@ let incomeExpenseOptions = {
 
 let incomeExpenseChart = new ApexCharts(document.querySelector("#income-expense-chart"), incomeExpenseOptions);
 incomeExpenseChart.render();
+
+// Category Breakdown Bar Chart
+let categoryBreakdownOptions = {
+    series: [{
+        name: 'Expenses',
+        data: window.categoryExpenses // This is dynamic data for each category
+    }],
+    chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: {
+            show: false
+        }
+    },
+    plotOptions: {
+        bar: {
+            borderRadius: 4,
+            horizontal: true,
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    xaxis: {
+        categories: window.categoryNames, // Dynamic categories
+        labels: {
+            formatter: function (val) {
+                return new Intl.NumberFormat('en-US').format(val); // Thousands separator
+            }
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function (val) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(val);
+            }
+        }
+    },
+    colors: ['#C68FE6'],
+};
+
+let categoryBreakdownChart = new ApexCharts(document.querySelector("#category-breakdown-chart"), categoryBreakdownOptions);
+categoryBreakdownChart.render();

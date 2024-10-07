@@ -30,7 +30,24 @@
                     <p class="text-gray-500 text-sm">No data available for this month.</p>
                 </div>
             @else
-                <div id="income-expense-chart" class="h-64"></div>
+                <div id="income-expense-chart" class="h-64 my-16"></div>
+            @endif
+        </div>
+
+        <!-- Category Breakdown Chart Card -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <!-- Card Header -->
+            <div class="card-header flex border-b items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-gray-800">Category Expenses</h2>
+            </div>
+
+            <!-- Card Body -->
+            @if (empty($categoryExpenses))
+                <div class="flex flex-col items-center justify-center h-40 py-4">
+                    <p class="text-gray-500 text-sm">No data available for this month.</p>
+                </div>
+            @else
+                <div id="category-breakdown-chart" class="h-64"></div>
             @endif
         </div>
 
@@ -48,6 +65,8 @@
         <script>
             window.income = {{ $income }};
             window.expense = {{ $expense }};
+            window.categoryExpenses = @json($categoryExpenses);
+            window.categoryNames = @json($categoryNames);
         </script>
     @endif
 </x-filament::page>

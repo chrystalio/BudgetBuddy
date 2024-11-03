@@ -60,10 +60,10 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('amount')->formatStateUsing(fn (string $state): string => number_format($state, 0, ',', '.')),
-                Tables\Columns\TextColumn::make('category.name')->label('Category'),
+                Tables\Columns\TextColumn::make('amount')->formatStateUsing(fn (string $state): string => number_format($state, 0, ',', '.'))->sortable(),
+                Tables\Columns\TextColumn::make('category.name')->label('Category')->sortable(),
                 Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('date')->date(),
+                Tables\Columns\TextColumn::make('date')->date()->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')

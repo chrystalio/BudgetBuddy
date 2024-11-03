@@ -10,8 +10,10 @@ class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
-        return []; // Disable all actions
+        return [
+            Actions\CreateAction::make(),
+        ];
     }
 }

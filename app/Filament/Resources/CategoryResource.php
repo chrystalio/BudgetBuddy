@@ -20,10 +20,6 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
     public static function form(Form $form): Form
     {
         return $form
@@ -54,14 +50,18 @@ class CategoryResource extends Resource
                         CategoryType::INCOME->value => 'Income',
                     ]),
             ])
-            ->actions([]) // Disable row actions
-            ->bulkActions([]); // Disable bulk actions
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListCategories::route('/'),
+            'create' => Pages\CreateCategory::route('/create'),
+            'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }
